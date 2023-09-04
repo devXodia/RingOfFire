@@ -89,11 +89,13 @@
   gap: 50px;
   h1{
     color: red;
+    font-size: 64px;
 
   }
   p{
     color: red;
     text-align: center;
+    font-size: 18px;
   }
 
   img{
@@ -103,6 +105,9 @@
   button{
     padding: 20px;
     border-style: unset;
+    background-color: red;
+    color: white;
+    font-size: 18px;
   }
 }
 
@@ -139,5 +144,11 @@
     left: 17px;
     bottom: 12px;
   overflow-y: scroll;
+  }
+
+  .end-screen{
+    h1{
+      font-size: 26px;
+  }
   }
 }
