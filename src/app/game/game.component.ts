@@ -26,7 +26,7 @@ export class GameComponent implements OnInit {
   }
 
   startGame = false;
-  endGame = true;
+  endGame = false;
 
   restartGame(){
     this.router.navigateByUrl('');
