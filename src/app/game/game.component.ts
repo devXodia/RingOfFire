@@ -3,6 +3,7 @@ import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -17,24 +18,46 @@ export class GameComponent implements OnInit {
     this.newGame();
   }
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private router: Router) {
+  }
 
   newGame() {
     this.game = new Game();
   }
 
+  startGame = false;
+  endGame = false;
+
+  restartGame(){
+    this.router.navigateByUrl('');
+  }
+
   takeCard() {
-    if (!this.pickCardAnimation) {
+    if(this.allCardsPlayed()){
+      this.gameOver();
+    }
+    if (!this.pickCardAnimation && this.startGame) {
       this.currentCard = this.game.stack.pop();
       this.pickCardAnimation = true;
       
       this.game.currentPlayer++
       this.game.currentPlayer = this.game.currentPlayer % this.game.players.length;
+      console.log(this.game.playedCards.length);
       setTimeout(() => {
         this.game.playedCards.push(this.currentCard);
+        
         this.pickCardAnimation = false;
       }, 1000);
+      
     }
+  }
+
+  allCardsPlayed(){
+    return this.game.playedCards.length == 52;
+  }
+
+  gameOver(){
+    this.endGame = true;
   }
 
   openDialog(): void {
@@ -43,6 +66,7 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe((name: string) => {
       if(name && name.length > 0){
         this.game.players.push(name);
+        this.startGame = true;
       }
       
     });

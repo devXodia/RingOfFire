@@ -1,3 +1,4 @@
+<div class="gap">
 <app-player 
 *ngFor="let player of game.players; let i = index;" 
 [ngStyle]="{'top.px': 100 + (i * 90)}" 
@@ -5,7 +6,7 @@
 [name]="player"
 class="player-position">
 </app-player>
-
+</div>
 <div class="game_field">
 
     <div class="card-stack">
@@ -25,3 +26,14 @@ class="player-position">
 <button mat-fab color="primary" class="btn-add" (click)="openDialog()">
     <mat-icon>add</mat-icon>
   </button>
+
+  <div class="end-screen" *ngIf="endGame">
+    <h1>ATTENTION! GAME OVER!</h1>
+    <p>Remember to please drink responsibly and to take care of yourself.<br>
+        If you want to continue, click on the button below to get back to the Main Menu and to start a new Game!
+
+    </p>
+        <button (click)="restartGame()">Back to Main Menu</button>
+    
+    
+</div>
