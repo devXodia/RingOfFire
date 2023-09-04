@@ -65,7 +65,10 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe((name: string) => {
       if(name && name.length > 0){
         this.game.players.push(name);
-        this.startGame = true;
+        if(this.game.players.length >= 2){
+          this.startGame = true;
+        }
+        
       }
       
     });
