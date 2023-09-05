@@ -18,5 +18,14 @@ export class Game{
     .map(({ value }) => value)
         
     }
+
+    public toJson(){
+        return {
+            players: this.players,
+            stack: this.stack,
+            playedCards: this.playedCards,
+            currentPlayer: this.currentPlayer
+        }
+    }
 }
 
