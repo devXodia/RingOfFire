@@ -1,4 +1,13 @@
 {
+  "targets": {
+    "ring-of-fire-d0b28": {
+      "hosting": {
+        "ringoffire": [
+          "ring-of-fire-d0b28"
+        ]
+      }
+    }
+  },
   "projects": {
     "default": "ring-of-fire-d0b28"
   }
