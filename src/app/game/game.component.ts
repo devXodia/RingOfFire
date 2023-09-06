@@ -28,9 +28,6 @@ export class GameComponent implements OnInit {
     this.newGame();
 
     this.route.params.subscribe((params) => {
-
-
-      
       const customDocumentId = params['id'];
       console.log(customDocumentId);
       const itemCollection = collection(this.firestore, 'games');
@@ -41,13 +38,14 @@ export class GameComponent implements OnInit {
 
       const documentRef = doc(itemCollection, customDocumentId);
 
-      setDoc(documentRef, gameData);
-      this.games$.subscribe((game) => {
-        console.log(game);
-    }
-  )});
-  }
-  
+      addDoc(itemCollection, gameData);
+
+  //     setDoc(documentRef, gameData);
+  //     this.games$.subscribe((game) => {
+  //       console.log(game);
+  // });
+})
+}
 
   constructor(
     public dialog: MatDialog,
