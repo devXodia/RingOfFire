@@ -22,28 +22,27 @@ export class GameComponent implements OnInit {
   
 
 
-  ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
     
 
     this.newGame();
 
     this.route.params.subscribe((params) => {
       const customDocumentId = params['id'];
-      console.log(customDocumentId);
       const itemCollection = collection(this.firestore, 'games');
-
+      const documentRef = doc(itemCollection, customDocumentId);
       this.games$ = collectionData(itemCollection);
-
+      console.log("current Game:", this.games$);
+      this.getGame(documentRef);
       const gameData = this.game.toJson();
 
-      const documentRef = doc(itemCollection, customDocumentId);
+      
 
       addDoc(itemCollection, gameData);
 
-  //     setDoc(documentRef, gameData);
-  //     this.games$.subscribe((game) => {
-  //       console.log(game);
-  // });
+      this.games$.subscribe((game) => {
+        console.log(game);
+  });
 })
 }
 
@@ -62,6 +61,17 @@ export class GameComponent implements OnInit {
 
   restartGame() {
     this.router.navigateByUrl('');
+  }
+
+  async getGame(documentRef){
+    const docSnap = await getDoc(documentRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
   }
 
   takeCard() {
