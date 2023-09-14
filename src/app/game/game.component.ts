@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Firestore, doc, getDoc, addDoc, collection, setDoc, collectionData} from '@angular/fire/firestore';
+import { Firestore, doc, getDoc, addDoc, collection, collectionData, onSnapshot} from '@angular/fire/firestore';
 import { Observable,  } from 'rxjs';
 
 
@@ -18,7 +18,8 @@ export class GameComponent implements OnInit {
   currentCard: string = '';
   game: Game;
   firestore: Firestore = inject(Firestore);
-  games$: Observable<any>;
+  gameData;
+ 
   
 
 
@@ -29,20 +30,8 @@ export class GameComponent implements OnInit {
 
     this.route.params.subscribe((params) => {
       const customDocumentId = params['id'];
-      const itemCollection = collection(this.firestore, 'games');
-      const documentRef = doc(itemCollection, customDocumentId);
-      this.games$ = collectionData(itemCollection);
-      console.log("current Game:", this.games$);
-      this.getGame(documentRef);
-      const gameData = this.game.toJson();
-
-      
-
-      addDoc(itemCollection, gameData);
-
-      this.games$.subscribe((game) => {
-        console.log(game);
-  });
+      this.subGameList(customDocumentId);
+  
 })
 }
 
@@ -51,6 +40,8 @@ export class GameComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {}
+
+
 
   newGame() {
     this.game = new Game();
@@ -63,16 +54,27 @@ export class GameComponent implements OnInit {
     this.router.navigateByUrl('');
   }
 
-  async getGame(documentRef){
-    const docSnap = await getDoc(documentRef);
-
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-    } else {
-      // docSnap.data() will be undefined in this case
-      console.log("No such document!");
-    }
+  getGameCollection(){
+    return collection(this.firestore, 'games');
   }
+
+    
+  subGameList(customDocumentId){
+      return onSnapshot(this.getGameCollection(), (list) => {
+        // this.normalNotes = [];
+        list.forEach((element) => {
+          // this.normalNotes.push(this.setNoteObject(element.data(), element.id));
+          if (element.id == customDocumentId){
+            const gameData = element.data();
+            this.game.currentPlayer = gameData['currentPlayer'];
+            this.game.players = gameData['players'];
+            this.game.playedCards = gameData['playedCards'];
+            this.game.stack = gameData['stack'];
+          }
+        });
+      });
+    }
+    
 
   takeCard() {
     if (this.allCardsPlayed()) {
