@@ -14,8 +14,7 @@ import { Observable,  } from 'rxjs';
   styleUrls: ['./game.component.scss'],
 })
 export class GameComponent implements OnInit {
-  pickCardAnimation = false;
-  currentCard: string = '';
+  
   game: Game;
   firestore: Firestore = inject(Firestore);
   gameData;
@@ -74,6 +73,9 @@ export class GameComponent implements OnInit {
             this.game.players = gameData['players'];
             this.game.playedCards = gameData['playedCards'];
             this.game.stack = gameData['stack'];
+            this.game.pickCardAnimation = gameData['pickCardAnimation'];
+            this.game.currentCard = gameData['currentCard'];
+            
             if(this.game.players.length >= 2){
               this.startGame = true;
             }
@@ -109,23 +111,26 @@ export class GameComponent implements OnInit {
     }
 
   takeCard() {
+    
     if (this.allCardsPlayed()) {
       this.gameOver();
     }
-    if (!this.pickCardAnimation && this.startGame) {
-      this.currentCard = this.game.stack.pop();
-      this.pickCardAnimation = true;
-
+    if (!this.game.pickCardAnimation && this.startGame) {
+      this.game.currentCard = this.game.stack.pop();
+      this.game.pickCardAnimation = true;
+     
       this.game.currentPlayer++;
       this.game.currentPlayer =
         this.game.currentPlayer % this.game.players.length;
+        this.updateGame();
       setTimeout(() => {
-        this.game.playedCards.push(this.currentCard);
-
-        this.pickCardAnimation = false;
+        this.game.playedCards.push(this.game.currentCard);
+        
+        this.game.pickCardAnimation = false;
+        this.updateGame();
       }, 1000);
     }
-    this.updateGame();
+    
   }
 
   allCardsPlayed() {
