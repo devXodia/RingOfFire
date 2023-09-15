@@ -1,10 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, OnDestroy } from '@angular/core';
 import { Game } from 'src/models/game';
 import { MatDialog } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Firestore, doc, getDoc, addDoc, collection, collectionData, onSnapshot, updateDoc} from '@angular/fire/firestore';
+import { Firestore, doc, getDoc, addDoc, collection, collectionData, onSnapshot, updateDoc, deleteDoc} from '@angular/fire/firestore';
 import { Observable,  } from 'rxjs';
 
 
@@ -43,8 +43,9 @@ export class GameComponent implements OnInit {
     this.unsubGame = this.subGameList();
   }
 
-  ngonDestroy(){
+  ngOnDestrory(){
     this.unsubGame();
+    this.deleteGameFromDatabase();
   }
 
   newGame() {
@@ -81,6 +82,10 @@ export class GameComponent implements OnInit {
       });
     }
     
+
+    async deleteGameFromDatabase(){
+      await deleteDoc(this.getCurrentGame());
+    }
 
     async updateGame(){
         let docRef = this.getCurrentGame();
@@ -129,6 +134,7 @@ export class GameComponent implements OnInit {
 
   gameOver() {
     this.endGame = true;
+    this.deleteGameFromDatabase();
   }
 
   openDialog(): void {
