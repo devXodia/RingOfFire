@@ -1,3 +1,9 @@
+mat-card{
+    @media (max-width: 720px){
+        min-height: 120px;
+      }
+}
+
 .card-title{
     padding: 0px 16px;
 }

@@ -20,6 +20,7 @@ import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideDatabase,getDatabase } from '@angular/fire/database';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { PlayerMobileComponent } from './player-mobile/player-mobile.component';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
     PlayerComponent,
     DialogAddPlayerComponent,
     GameInfoComponent,
+    PlayerMobileComponent,
   ],
   imports: [
     BrowserModule,
