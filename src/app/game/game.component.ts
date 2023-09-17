@@ -6,6 +6,7 @@ import { DialogAddPlayerComponent } from '../dialog-add-player/dialog-add-player
 import { ActivatedRoute, Router } from '@angular/router';
 import { Firestore, doc, getDoc, addDoc, collection, collectionData, onSnapshot, updateDoc, deleteDoc} from '@angular/fire/firestore';
 import { Observable,  } from 'rxjs';
+import { EditPlayerComponent } from '../edit-player/edit-player.component';
 
 
 @Component({
@@ -71,6 +72,7 @@ export class GameComponent implements OnInit {
             const gameData = element.data();
             this.game.currentPlayer = gameData['currentPlayer'];
             this.game.players = gameData['players'];
+            this.game.player_images = gameData['player_images'];
             this.game.playedCards = gameData['playedCards'];
             this.game.stack = gameData['stack'];
             this.game.pickCardAnimation = gameData['pickCardAnimation'];
@@ -137,6 +139,31 @@ export class GameComponent implements OnInit {
     return this.game.playedCards.length == 52;
   }
 
+  editPlayer(playerId: number){
+    console.log('edit Player', playerId)
+
+    const dialogRef = this.dialog.open(EditPlayerComponent);
+
+    dialogRef.afterClosed().subscribe((change: string) => {
+      if(change){
+        if(change == 'DELETE') {
+          this.game.players.splice(playerId, 1);
+          this.game.player_images.splice(playerId, 1);
+          if(this.game.players.length >= 2){
+            this.startGame = true;
+          }
+          else if(this.game.players.length < 2){
+            this.startGame = false;
+          }
+        } else {
+          this.game.player_images[playerId] = change;
+          
+        }
+        this.updateGame();
+      }
+    });
+  }
+
   gameOver() {
     this.endGame = true;
     this.deleteGameFromDatabase();
@@ -148,6 +175,7 @@ export class GameComponent implements OnInit {
     dialogRef.afterClosed().subscribe((name: string) => {
       if (name && name.length > 0) {
         this.game.players.push(name);
+        this.game.player_images.push('1.webp');
         this.updateGame();
         if (this.game.players.length >= 2) {
           this.startGame = true;
