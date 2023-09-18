@@ -28,6 +28,9 @@
         @media(max-width: 960px){
             width: 400px;
         }
+        @media(min-width: 1440px){
+            max-width: 572px;
+        }
         &:hover{
             filter: brightness(1.25);
             cursor: pointer;
